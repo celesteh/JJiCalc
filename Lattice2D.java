@@ -494,9 +494,9 @@ class Lattice2D extends JPanel implements ComponentListener, MouseMotionListener
         private void alertSoundStopped() {
                     if (listeners != null) {
                 SoundPlayEvent e = new SoundPlayEvent(this, SoundPlayEvent.STOPPED);
-                Enumeration enum = listeners.elements();
-                while (enum.hasMoreElements()) {
-                    SoundPlayListener spl = (SoundPlayListener) enum.nextElement();
+                Enumeration enumer = listeners.elements();
+                while (enumer.hasMoreElements()) {
+                    SoundPlayListener spl = (SoundPlayListener) enumer.nextElement();
                     if (spl != null && spl.isAlive()) {
                         spl.soundStopped(e);
                     } else {
@@ -510,9 +510,9 @@ class Lattice2D extends JPanel implements ComponentListener, MouseMotionListener
         private void alertSoundPlay() {
             if (listeners != null) {
                 SoundPlayEvent e = new SoundPlayEvent(this, SoundPlayEvent.PLAY);
-                Enumeration enum = listeners.elements();
-                while (enum.hasMoreElements()) {
-                    SoundPlayListener spl = (SoundPlayListener) enum.nextElement();
+                Enumeration enumer = listeners.elements();
+                while (enumer.hasMoreElements()) {
+                    SoundPlayListener spl = (SoundPlayListener) enumer.nextElement();
                     if (spl != null && spl.isAlive()) {
                         spl.soundPlay(e);
                     } else {

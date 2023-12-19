@@ -512,9 +512,9 @@ class TableCell extends JPanel implements Comparable, JRatioField.JRatioFieldAct
         private synchronized void alertSoundPlay () {
             if (soundPlayListeners != null) {
                 SoundPlayEvent e = new SoundPlayEvent(this, SoundPlayEvent.PLAY);
-                Enumeration enum = soundPlayListeners.elements();
-                while (enum.hasMoreElements()) {
-                    SoundPlayListener spl = (SoundPlayListener) enum.nextElement(); 
+                Enumeration enumer = soundPlayListeners.elements();
+                while (enumer.hasMoreElements()) {
+                    SoundPlayListener spl = (SoundPlayListener) enumer.nextElement();
                     if (spl != null) {
                         if (spl.isAlive()) {
                             spl.soundPlay(e);
@@ -530,9 +530,9 @@ class TableCell extends JPanel implements Comparable, JRatioField.JRatioFieldAct
         private synchronized void alertSoundStopped () {
             if (soundPlayListeners != null) {
                 SoundPlayEvent e = new SoundPlayEvent(this, SoundPlayEvent.STOPPED);
-                Enumeration enum = soundPlayListeners.elements();
-                while (enum.hasMoreElements()) {
-                    SoundPlayListener spl = (SoundPlayListener) enum.nextElement();                    
+                Enumeration enumer = soundPlayListeners.elements();
+                while (enumer.hasMoreElements()) {
+                    SoundPlayListener spl = (SoundPlayListener) enumer.nextElement();
                     if (spl != null) {
                         if (spl.isAlive()) {
                             spl.soundStopped(e);

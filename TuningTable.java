@@ -291,9 +291,9 @@ class TuningTable extends JPanel implements /*Externalizable,*/ TonicListener, T
         protected void alertTonicChanged( double newTonic) {
             if (tonicListeners != null ) {
                 TonicChangedEvent e = new TonicChangedEvent(this, newTonic);
-                Enumeration enum = tonicListeners.elements();
-                while (enum.hasMoreElements()) {
-                    ((TonicListener)enum.nextElement()).tonicChanged(e);
+                Enumeration enumer = tonicListeners.elements();
+                while (enumer.hasMoreElements()) {
+                    ((TonicListener)enumer.nextElement()).tonicChanged(e);
                 }
             }
         }
