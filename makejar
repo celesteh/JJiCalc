@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo compiling
+javac -g *.java
+
+echo jar-ing
+jar -cfm JJiCalc.jar manifest-additional.txt *.class tuning/ tuning/* images/ images/*
+
+echo cleaning up
+rm *.class *.bak
+
+echo running program
+java -jar JJiCalc.jar

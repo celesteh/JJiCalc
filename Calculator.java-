@@ -1,0 +1,90 @@
+class Calculator {
+
+	/*
+	calculate the cent base on the tonic and also the log value
+	that an octave is divided into, e.g., 1200 to calculate cents
+
+	The idea of the formula is that Frequency = tonic * 2^(units / parts in an octave)
+
+	note: frequencies < the tonic is doubled until its >= tonic
+	*/
+	public static double hzToLogValue(double hz, double baseHz, int logValue) {
+		if (logValue <= 0) return 0;
+		while (hz < baseHz) hz *= 2;
+		return logValue * Math.log(hz / baseHz) / Math.log(2);
+	}
+
+	//note: ratio smaller than 1 will be doubled until its > 1
+	public static double ratioToLogValue(Ratio r, int logValue) {
+		if (r == null) return 0;
+		if (Parameters.autoNormalize) r.normalize();
+		return logValue * Math.log((double)r.getNum() / r.getDen()) / Math.log(2);
+	}
+
+	public static double ratioToHz(Ratio r, double baseHz) {
+		if (r == null) return 0;
+		return baseHz * r.getNum() / r.getDen();
+	}
+
+	/*
+	given a unit (e.g. a cent value) calculate the ratio from the base log value
+	return in the form on fractional number, the fractional number is rounded
+	to the error given
+
+	e.g. 700 units, 1200 logValue (implies using cent as unit), and error 2 units
+	will yield {3, 2} which means 3/2, if the error is 1 cent will yield 295/197,
+	if error is 0.001 cent it will yield 2213/1477
+
+	idea:
+	starting from 1/1 as the current calculation, if it is smaller than the range
+	increase the numerator, if it is larger than the range increase the denominator,
+	until it falls into the range, note that cases like 1/2 and 2/4 are both checked,
+	leaving some space for improvement to this alrogithm
+	*/
+	public static Ratio logValueToRatio(int logValue, double unit, double error){
+		if (logValue <= 0) return null;
+		error = Math.abs(error);
+		if (error >= unit) error = DEFAULT_LOG_ERROR;
+		double ceiling = logValueToFactor(logValue, unit + error);
+		double floor = logValueToFactor(logValue, unit - error);
+
+		double num = 1;
+		double den = 1;
+
+		double ratio = num/den;
+		while (ratio < floor || ratio > ceiling) {	//while out of range
+			if (ratio < floor) num++;
+			if (ratio > ceiling) den++;
+			ratio = num/den;
+		}
+
+		return new Ratio((int)num, (int)den);
+	}
+
+	private static double logValueToFactor(int logValue, double unit) {
+		return Math.pow(2, unit/logValue);
+	}
+
+	public static final int LOG_CENT = 1200;
+	public static final int LOG_OCT1024 = 1024;
+	public static final int LOG_SIXTYFOURTH = 768;
+
+	private static final double DEFAULT_LOG_ERROR = 1.0; //default error for calculating fractions
+
+	public static void main (String args[]) {
+		System.out.println("hzToLogValue: hz=505.912, baseHz=440, logValue=1200: 600::" +
+			hzToLogValue(622.16, 440, 1200));
+		System.out.println("ratioToLogValue: r=16/15, logValue=1200:    ::" +
+			ratioToLogValue(new Ratio(16,15), 1200));
+		System.out.println("ratioToHz: r=3/2, baseHz=440: 660::" +
+			ratioToHz(new Ratio(3,2), 440));
+		System.out.println("logValueToRatio: logValue=1200, unit=700, error=2: 3/2::" +
+			logValueToRatio(1200, 700, 2));
+		System.out.println("logValueToRatio: logValue=1200, unit=700, error=1: 295/197::" +
+			logValueToRatio(1200, 700, 1));
+		System.out.println("logValueToRatio: logValue=1200, unit=700, error=0.001: 2213/1477::" +
+			logValueToRatio(1200, 700, 0.001));
+		System.out.println("logValueToFactor: logValue=1200, unit=702: 1.5::" +
+			logValueToFactor(1200, 702));
+	}
+}
